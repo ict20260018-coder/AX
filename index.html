@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 업무자동화 설계자</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f2f5fa;--card:#fff;--ink:#1b2437;--sub:#5b6881;--line:#d6dde9;--navy:#14306b;--blue:#2559c4;--soft:#e8effc;--loop:#eef3fb;--ok:#1a7f4b;--okbg:#e3f4ea;--warn:#a15c00;--warnbg:#fdf0d9;--err:#b3261e;--errbg:#fbe6e4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1626;--card:#18223a;--ink:#e6ebf6;--sub:#9aa7c2;--line:#2b3a5c;--navy:#0b1a3f;--blue:#6e9bff;--soft:#1f2f55;--loop:#142039;--okbg:#14382a;--warnbg:#3a2c10;--errbg:#3d1c1a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 "Pretendard","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+header{background:var(--navy);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:8px 28px;padding:10px 24px}
+header b{font-size:16px}nav{display:flex;gap:2px;flex-wrap:wrap}
+nav a{color:#c5d3f3;padding:8px 14px;border-radius:3px;text-decoration:none;cursor:pointer}
+nav a.on{background:#fff;color:var(--navy);font-weight:700}
+.intro{padding:18px 24px 6px}.intro h1{margin:0;font-size:22px;color:var(--navy)}
+.intro .sub{color:var(--blue);font-weight:600;margin:2px 0 6px}.intro p{margin:0;color:var(--sub);max-width:900px}
+@media (prefers-color-scheme:dark){.intro h1{color:var(--ink)}}
+main{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:16px;padding:14px 24px 28px;align-items:start}
+@media(max-width:900px){main{grid-template-columns:1fr;padding:12px}header,.intro{padding-left:12px;padding-right:12px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px}
+h2{font-size:16px;margin:0 0 12px;color:var(--navy)}h3{font-size:14px;margin:0 0 8px}
+@media (prefers-color-scheme:dark){h2{color:var(--ink)}}
+label{display:block;font-weight:600;margin:10px 0 4px;font-size:13px}label i{font-weight:400;color:var(--sub);font-style:normal}
+input,textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--ink)}
+textarea{min-height:190px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible,nav a:focus-visible,.tab:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:3px}
+button.pri{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:700;font-size:15px;padding:12px;width:100%;margin-top:10px}
+@media (prefers-color-scheme:dark){button.pri{background:var(--blue);border-color:var(--blue);color:#0b1a3f}}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.row button{flex:1}
+.head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.head h2{margin:0;font-size:19px}.tools{display:flex;gap:6px;flex-wrap:wrap}.tools button{padding:6px 10px;font-size:13px}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:12px;font-weight:700;background:var(--okbg);color:var(--ok);margin-right:6px}
+.badge.b{background:var(--soft);color:var(--blue)}.badge.rag{background:var(--warnbg);color:var(--warn);font-size:11px;padding:1px 6px;margin:0 6px 0 0}
+.tabs{display:flex;gap:0;overflow-x:auto;border-bottom:2px solid var(--line);margin:12px 0}
+.tab{padding:9px 14px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--sub);background:none;border-radius:0;border-top:0;border-left:0;border-right:0}
+.tab.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.mini{border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--bg)}.mini small{color:var(--sub);display:block}.mini b{display:block;margin-top:2px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;font-size:13px}th{background:var(--soft);white-space:nowrap}
+tbody tr:nth-child(even){background:var(--bg)}
+.arch{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px}
+.arch span.n{background:var(--soft);border:1px solid var(--blue);border-radius:4px;padding:8px 12px;font-weight:600}.arch span.a{color:var(--blue);font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.two{grid-template-columns:1fr}}
+pre.code{background:var(--bg);border:1px solid var(--line);padding:12px;border-radius:3px;white-space:pre-wrap;font:13px/1.7 ui-monospace,Menlo,Consolas,monospace;margin:0}
+.exc{border-left:4px solid var(--err);background:var(--errbg)}.exc div{margin-top:4px}
+.flowwrap{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px}@media(max-width:900px){.flowwrap{grid-template-columns:1fr}}
+.flowwrap svg{width:100%;height:auto;max-width:700px;display:block;margin:auto}
+.fn{cursor:pointer}.fn .sh{fill:var(--card);stroke:var(--blue);stroke-width:1.5}.fn.dec .sh{fill:var(--warnbg);stroke:var(--warn)}.fn.se .sh{fill:var(--navy);stroke:var(--navy)}
+.fn.se text{fill:#fff}.fn.sel .sh{stroke-width:3;stroke:var(--err)}.fn:focus{outline:none}.fn:focus .sh{stroke-width:3}
+.fn text{fill:var(--ink);font-size:12.5px;text-anchor:middle;pointer-events:none}
+.edge{fill:none;stroke:var(--sub);stroke-width:1.5}.edge.back{stroke-dasharray:5 4;stroke:var(--blue)}.el{fill:var(--sub);font-size:11.5px;font-weight:700}
+.loopbox{fill:var(--loop);stroke:var(--blue);stroke-dasharray:6 4}.looplbl{fill:var(--blue);font-weight:700;font-size:13px}
+.detail dl{margin:0}.detail dt{font-size:12px;color:var(--sub);margin-top:8px}.detail dd{margin:0;font-weight:600}
+.ref ul{margin:6px 0 0;padding-left:0;list-style:none}.ref li{padding:3px 0}
+.empty{text-align:center;color:var(--sub);padding:60px 10px}
+dialog{width:min(760px,94vw);border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink);padding:16px}
+dialog::backdrop{background:rgba(10,20,40,.5)}dialog pre{max-height:60vh;overflow:auto}
+@media print{header,.intro,.left,.tools,.tabs{display:none}main{display:block;padding:0}.pane{display:block!important;break-inside:avoid;margin-bottom:12px}}
+</style></head><body>
+<header><b>AI 업무자동화 플랫폼</b><nav id="nav"></nav></header>
+<div class="intro"><h1>AI 업무자동화 설계자</h1><div class="sub">업무를 설명하면 Brity RPA 구현 설계도를 생성합니다.</div>
+<p>자동화하고 싶은 업무를 자연어로 입력하면 기존 자동화 사례와 Brity RPA 기술정보를 기반으로 필요한 Action, 변수, 반복문, 조건문 및 구현 Flow를 설계합니다.</p></div>
+<main>
+<section class="card left"><h2>자동화할 업무를 설명해주세요</h2>
+<label for="f_name">업무명 <i>(선택)</i></label><input id="f_name">
+<label for="f_desc">업무 설명</label>
+<textarea id="f_desc" placeholder="예)&#10;매일 ERP에 접속해서 수의계약 체결 대상 건을 조회하고,&#10;엑셀에 있는 계약번호를 한 건씩 입력한 후&#10;계약상태가 '체결대기'인 경우 체결 버튼을 누르고&#10;처리 결과를 엑셀에 저장하고 싶습니다."></textarea>
+<div class="g2"><div><label for="f_dept">담당 부서 <i>(선택)</i></label><input id="f_dept"></div>
+<div><label for="f_sys">대상 시스템 <i>(선택)</i></label><input id="f_sys"></div>
+<div><label for="f_cycle">실행 주기 <i>(선택)</i></label><input id="f_cycle"></div>
+<div><label for="f_cnt">예상 처리 건수 <i>(선택)</i></label><input id="f_cnt"></div></div>
+<label for="f_file">입력 파일 <i>(선택)</i></label><input id="f_file" placeholder="예) 수의계약_대상목록.xlsx">
+<div class="row"><button id="bEx">예제 불러오기</button><button id="bReset">설계 초기화</button></div>
+<button class="pri" id="bGen">AI 자동화 설계 생성</button></section>
+<section id="right"></section>
+</main>
+<dialog id="dlg"><div class="head"><h2>automationDesign (JSON)</h2><div class="tools"><button id="bCopy">JSON 복사</button><button id="bClose">닫기</button></div></div><pre class="code" id="jsonOut"></pre></dialog>
+
+<script>
+/* ============ 확장 연계 포인트 ============
+ [1] 공단 생성형 AI API: generateDesign() 내부 — 입력 폼 값을 프롬프트로 전달하고 아래 JSON 구조로 응답받아 setDesign() 호출
+ [2] RAG 검색 API: references 배열을 채우는 위치 (검색 결과 → references)
+ [3] Brity Action Library: actions[].brityAction 명칭을 라이브러리 DB 값으로 교체하는 위치
+ [4] 기존 RPA 사례 DB: references.cases 및 flowNodes/implementationSteps 초안 검색 위치
+ ========================================== */
+const MOCK_FORM={name:"수의계약 체결 자동화",dept:"계약부서",sys:"ERP",cycle:"매일",file:"수의계약_대상목록.xlsx",cnt:"약 100건",
+desc:"엑셀에 있는 수의계약 대상 계약번호를 한 건씩 ERP에서 조회한다.\nERP 계약관리 메뉴에서 계약번호를 입력하고 조회 버튼을 누른다.\n계약상태가 '체결대기'이면 체결 버튼을 클릭한다.\n이미 체결된 계약이면 별도의 처리를 하지 않고 결과에 '이미 체결'이라고 기록한다.\n처리가 완료되면 계약번호, 업체명, 계약상태, 처리결과를 Excel에 저장한다."};
+
+/* 단일 데이터 객체: 모든 화면은 이 구조로 렌더링 (생성형 AI 응답 JSON과 동일 구조) */
+const MOCK_DESIGN={
+task:{title:"수의계약 체결 자동화",fit:"자동화 적합",method:"Brity RPA",purpose:"ERP 수의계약 체결 업무 자동화",system:"ERP",input:"Excel 계약 대상 목록",output:"계약 처리 결과 Excel",suitability:"높음"},
+architecture:{steps:["Excel 계약목록","Brity RPA","ERP 계약조회","계약상태 판단","체결 처리","결과 저장"]},
+actions:[
+{no:1,func:"Excel 읽기",brityAction:"Excel Read",use:"계약 대상 불러오기",input:"입력파일",output:"계약목록"},
+{no:2,func:"반복처리",brityAction:"For Each Row",use:"계약 한 건씩 반복",input:"계약목록",output:"현재 행"},
+{no:3,func:"값 입력",brityAction:"Set Text",use:"계약번호 입력",input:"contract_no",output:"-"},
+{no:4,func:"조회",brityAction:"Click",use:"조회 버튼 클릭",input:"조회버튼",output:"-"},
+{no:5,func:"값 읽기",brityAction:"Get Text",use:"계약상태 확인",input:"상태영역",output:"contract_status"},
+{no:6,func:"조건",brityAction:"If",use:"계약상태 판단",input:"contract_status",output:"분기"},
+{no:7,func:"체결",brityAction:"Click",use:"체결 버튼 클릭",input:"체결버튼",output:"처리결과"},
+{no:8,func:"Excel 저장",brityAction:"Excel Write",use:"결과 저장",input:"result",output:"결과파일"},
+{no:9,func:"로그",brityAction:"Log",use:"처리 로그 기록",input:"처리정보",output:"로그"}],
+variables:[
+{name:"contract_no",desc:"계약번호",type:"String",init:'""',step:"계약조회"},
+{name:"company_name",desc:"업체명",type:"String",init:'""',step:"결과저장"},
+{name:"contract_status",desc:"계약상태",type:"String",init:'""',step:"조건판단"},
+{name:"result_msg",desc:"처리결과",type:"String",init:'""',step:"결과저장"},
+{name:"row_index",desc:"현재 행 번호",type:"Integer",init:"0",step:"반복문"},
+{name:"retry_count",desc:"재시도 횟수",type:"Integer",init:"0",step:"오류처리"}],
+conditions:[{title:"계약상태 분기",code:'IF contract_status == "체결대기"\n  → 체결 버튼 클릭\n  → result_msg = "체결완료"\n\nELSE IF contract_status == "이미체결"\n  → result_msg = "이미 체결"\n\nELSE\n  → result_msg = "확인 필요"'}],
+loops:[{target:"Excel 계약 목록",unit:"한 행(Row)",variable:"row_index",body:["계약번호 읽기","ERP 조회","상태 확인","조건문 실행","결과 저장"],end:"마지막 계약 데이터까지 처리 완료"}],
+flowNodes:[
+{id:"start",type:"se",label:"시작",x:350,y:30,w:110,h:30,action:"-",input:"-",output:"-",vars:"-",exc:"-"},
+{id:"read",type:"act",label:"Excel 계약목록 읽기",x:350,y:95,w:190,h:36,action:"Excel Read",input:"입력파일 경로",output:"계약목록",vars:"-",exc:"파일 없음 → 오류 로그 후 종료"},
+{id:"login",type:"act",label:"ERP 로그인",x:350,y:160,w:190,h:36,action:"Set Text / Click",input:"ID, PW",output:"로그인 상태",vars:"retry_count",exc:"실패 시 3회 재시도 후 종료"},
+{id:"input",type:"act",label:"계약번호 입력",x:350,y:270,w:180,h:36,action:"Set Text",input:"contract_no",output:"-",vars:"contract_no, row_index",exc:"입력 객체 미인식 시 재탐색"},
+{id:"query",type:"act",label:"ERP 조회",x:350,y:335,w:180,h:36,action:"Click + Get Text",input:"조회버튼",output:"contract_status, company_name",vars:"contract_status, company_name",exc:"조회 실패 시 오류 로그, 다음 건 처리"},
+{id:"d1",type:"dec",label:"계약상태 = 체결대기?",x:350,y:420,w:170,h:76,action:"If",input:"contract_status",output:"분기",vars:"contract_status",exc:"상태값 비어 있으면 '조회결과 없음'"},
+{id:"click",type:"act",label:"체결 버튼 클릭",x:140,y:510,w:140,h:36,action:"Click",input:"체결버튼",output:"처리결과",vars:"-",exc:"객체 인식 실패 시 재탐색 → 담당자 확인"},
+{id:"done",type:"act",label:"결과 = 체결완료",x:140,y:600,w:140,h:36,action:"Assign",input:"-",output:"result_msg",vars:"result_msg",exc:"-"},
+{id:"d2",type:"dec",label:"이미 체결?",x:520,y:510,w:170,h:76,action:"If",input:"contract_status",output:"분기",vars:"contract_status",exc:"-"},
+{id:"already",type:"act",label:"이미 체결 기록",x:400,y:610,w:110,h:36,action:"Assign",input:"-",output:"result_msg",vars:"result_msg",exc:"-"},
+{id:"check",type:"act",label:"확인 필요",x:610,y:610,w:110,h:36,action:"Assign",input:"-",output:"result_msg",vars:"result_msg",exc:"담당자 확인 필요 표시"},
+{id:"save",type:"act",label:"결과 저장",x:350,y:690,w:150,h:36,action:"Excel Write / Log",input:"계약번호, 업체명, 상태, 처리결과",output:"결과행",vars:"result_msg",exc:"저장 실패 시 임시파일 저장"},
+{id:"endloop",type:"act",label:"반복 종료",x:350,y:780,w:150,h:36,action:"End For Each",input:"-",output:"-",vars:"row_index",exc:"-"},
+{id:"write",type:"act",label:"Excel 결과 저장",x:350,y:845,w:170,h:36,action:"Excel Write",input:"result",output:"결과파일",vars:"-",exc:"저장 실패 시 임시파일 + 오류 로그"},
+{id:"end",type:"se",label:"종료",x:350,y:905,w:110,h:30,action:"-",input:"-",output:"-",vars:"-",exc:"-"}],
+flowEdges:[
+{p:"350,45 350,77"},{p:"350,113 350,142"},{p:"350,178 350,252"},{p:"350,288 350,317"},{p:"350,353 350,382"},
+{p:"265,420 140,420 140,492",l:"YES",lx:150,ly:440},{p:"435,420 520,420 520,472",l:"NO",lx:480,ly:412},{p:"140,528 140,582"},
+{p:"435,510 400,510 400,592",l:"YES",lx:410,ly:545},{p:"605,510 610,510 610,592",l:"NO",lx:620,ly:545},
+{p:"140,618 140,690 275,690"},{p:"400,628 400,650 350,650 350,672"},{p:"610,628 610,650 350,650"},
+{p:"425,690 672,690 672,235 420,235 420,252",back:1,l:"다음 계약으로 반복",lx:520,ly:705},
+{p:"350,708 350,762"},{p:"350,798 350,827"},{p:"350,863 350,890"}],
+implementationSteps:[
+{step:1,type:"준비",task:"변수 선언 및 초기화",action:"Set Variable",input:"-",output:"변수 6종",vars:"전체",exc:"-"},
+{step:2,type:"입력",task:"Excel 계약목록 열기/읽기",action:"Excel Read",input:"입력파일",output:"계약목록",vars:"-",exc:"파일 없음 시 종료"},
+{step:3,type:"접속",task:"ERP 접속 및 로그인",action:"Open Browser / Set Text / Click",input:"URL, ID, PW",output:"로그인 상태",vars:"retry_count",exc:"3회 재시도"},
+{step:4,type:"이동",task:"계약관리 메뉴 이동",action:"Click",input:"메뉴 객체",output:"-",vars:"-",exc:"객체 재탐색"},
+{step:5,type:"반복",task:"계약 건별 반복 시작",action:"For Each Row",input:"계약목록",output:"현재 행",vars:"row_index",exc:"빈 행 건너뜀"},
+{step:6,type:"입력",task:"계약번호 읽어 입력",action:"Set Text",input:"contract_no",output:"-",vars:"contract_no",exc:"공백 시 건너뜀"},
+{step:7,type:"조회",task:"조회 버튼 클릭",action:"Click",input:"조회버튼",output:"-",vars:"-",exc:"조회 실패 로그"},
+{step:8,type:"확인",task:"계약상태·업체명 읽기",action:"Get Text",input:"상태영역, 업체영역",output:"contract_status, company_name",vars:"contract_status, company_name",exc:"결과 없음 기록"},
+{step:9,type:"조건",task:"계약상태 판단",action:"If / Else If / Else",input:"contract_status",output:"분기",vars:"contract_status",exc:"-"},
+{step:10,type:"처리",task:"체결 버튼 클릭 및 결과 설정",action:"Click / Assign",input:"체결버튼",output:"result_msg",vars:"result_msg",exc:"인식 실패 시 확인 필요"},
+{step:11,type:"기록",task:"건별 결과 저장 및 로그",action:"Excel Write / Log",input:"result",output:"결과행",vars:"result_msg",exc:"임시파일 저장"},
+{step:12,type:"종료",task:"반복 종료, 결과 파일 저장, 브라우저 종료",action:"End For Each / Excel Save / Close",input:"result",output:"결과파일",vars:"-",exc:"오류 로그"}],
+exceptions:[
+{title:"ERP 로그인 실패",handling:["3회 재시도","계속 실패 시 종료 및 로그 기록"]},
+{title:"계약번호 조회 실패",handling:["오류 로그","다음 계약번호 처리"]},
+{title:"계약정보 없음",handling:['"조회결과 없음" 기록']},
+{title:"버튼 객체 인식 실패",handling:["재탐색","실패 시 담당자 확인 필요"]},
+{title:"Excel 저장 실패",handling:["임시파일 저장","오류 로그"]}],
+tests:[
+{id:"TC-001",desc:"정상 체결 대상",input:"체결대기",expect:"체결 처리 완료",status:"대기"},
+{id:"TC-002",desc:"이미 체결된 계약",input:"이미체결",expect:"체결하지 않고 결과 기록",status:"대기"},
+{id:"TC-003",desc:"없는 계약번호",input:"계약정보 없음",expect:"오류 기록 후 다음 계약",status:"대기"},
+{id:"TC-004",desc:"ERP 장애",input:"접속불가",expect:"3회 재시도 후 종료",status:"대기"}],
+references:{cases:["AUTO-003 ERP 계약조회 자동화","AUTO-011 Excel 기반 ERP 등록 자동화"],knowledge:["Excel 처리 가이드","Web UI 제어 가이드","조건문/반복문 가이드"]}};
+
+const MENUS=["업무 자동화 설계","기존 자동화 사례","Brity 라이브러리","설정"];
+const TABS=[["overview","전체 설계"],["actions","Brity Action"],["flow","Flow"],["vars","변수"],["cond","조건·반복"],["impl","상세 구현"],["exc","예외처리"],["test","테스트"]];
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let design=null,tab="overview",sel="d1";
+
+/* [1] 생성형 AI API 연결 위치 — 현재는 Mock 반환 */
+async function generateDesign(form){ /* const res=await fetch(AI_API_URL,{method:"POST",body:JSON.stringify(form)}); return await res.json(); */ return structuredClone(MOCK_DESIGN); }
+
+const table=(cols,rows)=>`<div class="tw"><table><thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c[0]])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+
+function flowSvg(d){
+ const nodes=d.flowNodes,N=Object.fromEntries(nodes.map(n=>[n.id,n]));
+ const edges=d.flowEdges.map(e=>`<polyline class="edge ${e.back?"back":""}" points="${e.p}" marker-end="url(#ar)"/>${e.l?`<text class="el" x="${e.lx}" y="${e.ly}">${esc(e.l)}</text>`:""}`).join("");
+ const shp=n=>{const x=n.x-n.w/2,y=n.y-n.h/2;
+  if(n.type==="dec")return`<polygon class="sh" points="${n.x},${y} ${n.x+n.w/2},${n.y} ${n.x},${y+n.h} ${x},${n.y}"/>`;
+  return`<rect class="sh" x="${x}" y="${y}" width="${n.w}" height="${n.h}" rx="${n.type==="se"?n.h/2:3}"/>`};
+ const g=nodes.map(n=>`<g class="fn ${n.type} ${n.id===sel?"sel":""}" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.label)}">${shp(n)}<text x="${n.x}" y="${n.y+4.5}">${esc(n.label)}</text></g>`).join("");
+ return`<svg viewBox="0 0 700 940" role="img" aria-label="자동화 순서도"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--sub)"/></marker></defs>
+ <rect class="loopbox" x="20" y="205" width="670" height="530" rx="6"/><text class="looplbl" x="34" y="224">FOR EACH 계약 건</text>${edges}${g}</svg>`;
+}
+function detailHtml(d){const n=d.flowNodes.find(x=>x.id===sel);if(!n)return"";
+ return`<div class="card detail"><h3>${esc(n.label)}</h3><dl>${[["단계명",n.label],["Brity Action",n.action],["입력값",n.input],["출력값",n.output],["사용 변수",n.vars],["예외처리",n.exc]].map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>`}
+
+const PANES={
+overview:d=>{const t=d.task;return`<div class="cards">${[["업무 목적",t.purpose],["대상 시스템",t.system],["자동화 방식",t.method],["입력",t.input],["출력",t.output],["자동화 적합성",t.suitability]].map(([k,v])=>`<div class="mini"><small>${k}</small><b>${esc(v)}</b></div>`).join("")}</div>
+ <h3 style="margin-top:18px">Architecture</h3><div class="arch">${d.architecture.steps.map((s,i)=>(i?`<span class="a">→</span>`:"")+`<span class="n">${esc(s)}</span>`).join("")}</div>`},
+actions:d=>table([["no","순서"],["func","기능"],["brityAction","Brity Action"],["use","용도"],["input","입력"],["output","출력"]],d.actions),
+flow:d=>`<div class="flowwrap"><div>${flowSvg(d)}</div><div id="det">${detailHtml(d)}<p style="color:var(--sub);font-size:12px">순서도의 단계를 클릭하면 상세 정보가 표시됩니다.</p></div></div>`,
+vars:d=>table([["name","변수명"],["desc","설명"],["type","Type"],["init","초기값"],["step","사용단계"]],d.variables),
+cond:d=>`<div class="two"><div class="card"><h3>조건문</h3>${d.conditions.map(c=>`<pre class="code">${esc(c.code)}</pre>`).join("")}</div>
+ <div class="card"><h3>반복문</h3>${d.loops.map(l=>`<div class="mini"><small>반복 대상</small><b>${esc(l.target)}</b></div><div class="mini" style="margin-top:6px"><small>반복 단위</small><b>${esc(l.unit)}</b></div><div class="mini" style="margin-top:6px"><small>반복 변수</small><b>${esc(l.variable)}</b></div><h3 style="margin-top:12px">반복 내부 작업</h3><ol>${l.body.map(b=>`<li>${esc(b)}</li>`).join("")}</ol><div class="mini"><small>종료 조건</small><b>${esc(l.end)}</b></div>`).join("")}</div></div>`,
+impl:d=>table([["step","Step"],["type","구분"],["task","업무"],["action","Brity Action"],["input","입력"],["output","출력"],["vars","변수"],["exc","예외처리"]],d.implementationSteps),
+exc:d=>`<div class="cards">${d.exceptions.map(e=>`<div class="card exc"><h3>${esc(e.title)}</h3>${e.handling.map(h=>`<div>→ ${esc(h)}</div>`).join("")}</div>`).join("")}</div>`,
+test:d=>table([["id","Test ID"],["desc","테스트 내용"],["input","입력값"],["expect","예상 결과"],["status","상태"]],d.tests)};
+
+function render(){
+ const r=$("#right");
+ if(!design){r.innerHTML=`<div class="card empty"><h2>설계 결과가 여기에 표시됩니다</h2><p>왼쪽에 업무를 입력하거나 [예제 불러오기]를 누른 뒤 [AI 자동화 설계 생성]을 눌러주세요.</p></div>`;return}
+ const d=design,t=d.task;
+ r.innerHTML=`<div class="card"><div class="head"><div><h2>${esc(t.title)}</h2><span class="badge">${esc(t.fit)}</span><span class="badge b">추천 방식: ${esc(t.method)}</span></div>
+ <div class="tools"><button id="bPrint">설계 결과 인쇄</button><button id="bJson">JSON 보기</button></div></div>
+ <div class="tabs" role="tablist">${TABS.map(([k,l])=>`<button class="tab ${k===tab?"on":""}" role="tab" aria-selected="${k===tab}" data-tab="${k}">${l}</button>`).join("")}</div>
+ <div class="pane" style="display:block">${PANES[tab](d)}</div>
+ <div class="ref card" style="margin-top:16px"><h3>AI 참고자료</h3><div class="two"><div><b>참고한 기존 자동화 사례</b><ul>${d.references.cases.map(c=>`<li><span class="badge rag">RAG</span>${esc(c)}</li>`).join("")}</ul></div><div><b>참고한 Brity 지식</b><ul>${d.references.knowledge.map(c=>`<li><span class="badge rag">RAG</span>${esc(c)}</li>`).join("")}</ul></div></div>
+ <p style="color:var(--sub);font-size:12px;margin:8px 0 0">실제 서비스에서는 RAG 검색 결과가 이 영역에 전달됩니다.</p></div></div>`;
+}
+const fields={name:"#f_name",desc:"#f_desc",dept:"#f_dept",sys:"#f_sys",cycle:"#f_cycle",cnt:"#f_cnt",file:"#f_file"};
+const getForm=()=>Object.fromEntries(Object.entries(fields).map(([k,s])=>[k,$(s).value]));
+const setForm=f=>Object.entries(fields).forEach(([k,s])=>$(s).value=f[k]||"");
+
+$("#nav").innerHTML=MENUS.map((m,i)=>`<a class="${i?"":"on"}" tabindex="0" data-m="${i}">${m}</a>`).join("");
+$("#nav").addEventListener("click",e=>{const a=e.target.closest("a");if(a&&a.dataset.m!=="0")alert("프로토타입에서는 '업무 자동화 설계' 화면만 제공됩니다.")});
+$("#bEx").onclick=()=>setForm(MOCK_FORM);
+$("#bReset").onclick=()=>{setForm({});design=null;tab="overview";render()};
+$("#bGen").onclick=async()=>{
+ if(!$("#f_desc").value.trim()){alert("업무 설명을 입력하거나 [예제 불러오기]를 눌러주세요.");$("#f_desc").focus();return}
+ design=await generateDesign(getForm());tab="overview";sel="d1";render()};
+$("#bClose").onclick=()=>$("#dlg").close();
+$("#bCopy").onclick=async()=>{const s=JSON.stringify(design,null,2);try{await navigator.clipboard.writeText(s);$("#bCopy").textContent="복사 완료"}catch(e){const r=document.createRange();r.selectNodeContents($("#jsonOut"));getSelection().removeAllRanges();getSelection().addRange(r);$("#bCopy").textContent="선택됨: Ctrl+C로 복사"}setTimeout(()=>$("#bCopy").textContent="JSON 복사",2000)};
+$("#right").addEventListener("click",e=>{
+ const tb=e.target.closest("[data-tab]");if(tb){tab=tb.dataset.tab;render();return}
+ const fn=e.target.closest(".fn");if(fn){sel=fn.dataset.id;render();return}
+ if(e.target.id==="bPrint")window.print();
+ if(e.target.id==="bJson"){$("#jsonOut").textContent=JSON.stringify(design,null,2);$("#bCopy").textContent="JSON 복사";$("#dlg").showModal()}});
+$("#right").addEventListener("keydown",e=>{const fn=e.target.closest(".fn");if(fn&&(e.key==="Enter"||e.key===" ")){e.preventDefault();sel=fn.dataset.id;render();document.querySelector(`.fn[data-id="${sel}"]`)?.focus()}});
+render();
+</script></body></html>
